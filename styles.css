@@ -1,0 +1,1341 @@
+/* === SISTEMA DE DESIGN PREMIUM: TEMA GOLD & BLACK / GLASSMORPHISM === */
+:root {
+    /* Paleta de Cores (Premium Dark) */
+    --bg-primary: #0D0D0D;      /* Fundo principal, preto profundo */
+    --surface-card: rgba(26, 26, 26, 0); /* Grafite semi-transparente para o efeito de vidro */
+    --surface-card-solid: #1A1A1A; /* Versão sólida do card para fundos */
+    --border-color: rgba(212, 175, 55, 0.2); /* Borda dourada muito sutil */
+    --text-primary: #F0F0F0;      /* Branco suave para títulos e textos importantes */
+    --text-secondary: #B3B3B3;    /* Cinza claro para textos secundários e de apoio */
+    --accent-primary: #D4AF37;    /* Dourado metálico principal */
+    --accent-hover: #E7C668;      /* Dourado mais claro para hover */
+    --positive-color: #0aff39;    /* Verde para lucro (maior contraste) */
+    --negative-color: #ff0a0a;    /* Vermelho para perda (maior contraste) */
+    --warning-color: var(--accent-primary); /* Amarelo para aviso, usando o dourado */
+
+    /* Tipografia */
+    --font-family: 'Sora', sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.6;
+
+    /* Sistema de Espaçamento */
+    --space-xs: 0.5rem;   /* 8px */
+    --space-sm: 1rem;     /* 16px */
+    --space-md: 1.5rem;   /* 24px */
+    --space-lg: 2.5rem;   /* 40px */
+    --space-xl: 4rem;     /* 64px */
+
+    /* Bordas e Sombras */
+    --border-radius-sm: 8px;
+    --border-radius-lg: 20px; /* Bordas mais arredondadas para um look moderno */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+    --shadow-md: 0 5px 15px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+
+    /* Transições */
+    --transition-fluid: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {  
+    scroll-behavior: smooth;  
+    font-size: var(--font-size-base);
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-primary);
+    background-image: linear-gradient(180deg, #1A1A1A 0%, #0D0D0D 100%);
+    background-attachment: fixed;
+    color: var(--text-secondary);
+    line-height: var(--line-height-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: all 0.5s ease;
+}
+
+.content-wrapper {  
+    position: relative;  
+    z-index: 1;  
+    margin: 0 auto;  
+    padding: var(--space-xl) var(--space-md);  
+    max-width: 1200px;
+  overflow-x: hidden;
+}
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(0px); } to { opacity: 1; transform: translateY(0); } }
+.stagger-in {
+    animation: fadeInUp 0.5s var(--transition-fluid) both;
+    animation-delay: calc(var(--stagger-index) * 100ms);
+}
+
+/* === HIERARQUIA TIPOGRÁFICA REFINADA === */
+h1, h2, h3, h4, h5 {  
+    color: var(--text-primary);  
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+    transition: all 0.5s ease;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: +0.02em;
+
+}
+h1 { font-size: 2.5rem; line-height: 1.2; text-align: center;}
+h2 { font-size: 2rem; line-height: 1.3; text-align: center; }
+h3 { font-size: 1.5rem; line-height: 1.4; }
+h4 { font-size: 1.125rem; font-weight: 600; color: var(--text-secondary); }
+h5 { font-family: "Inter" ; font-size: 2.0rem; line-height: 1.4; letter-spacing: 0.1em; color: var(--accent-primary); }
+
+
+.text-positive { color: var(--positive-color) !important; }
+.text-negative { color: var(--negative-color) !important; }
+.text-accent-primary { color: var(--accent-primary); }
+.logo-path { fill: var(--accent-primary); }
+
+.logo { display: flex; justify-content: center; align-items: center; margin-bottom: var(--space-lg);  }
+
+
+/* === COMPONENTES PREMIUM === */
+
+@keyframes gradient-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.btn {  
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);  
+    padding: 0.75rem var(--space-md);  
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;  
+    font-size: 0.95rem;
+    transition: var(--transition-fluid);  
+    border: 1px solid transparent;  
+    transform: scale(1);
+    box-shadow: none;
+}
+.btn:hover {  
+    transform: translateY(-0px);
+    box-shadow: var(--shadow-md);
+}
+.btn:disabled { cursor: not-allowed; opacity: 0.5; transform: none; box-shadow: none; }
+
+.btn-primary {  
+    background: linear-gradient(45deg, var(--accent-hover), #FFEE99 , var(--accent-hover));
+    background-size: 150% auto;
+    color: #0D0D0D;  
+    border-color: transparent;
+    transition: 0.9s;
+}
+
+.btn-primary:active { transform: scale(0.98);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    background: linear-gradient(45deg, var(--accent-hover), #FFEE99  , var(--accent-hover));
+    background-size: 250% auto;
+    color: #0D0D0D;
+    border-color: transparent;
+    transition: 0.5s;
+
+}
+.btn-primary:hover:not(:disabled) {  
+    animation: gradient-animation 3s ease infinite;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-secondary {  
+    background-color: transparent;
+    color: var(--accent-primary);  
+    border-color: var(--accent-primary);
+}
+.btn-secondary:hover:not(:disabled) { 
+  background: linear-gradient(45deg, var(--accent-hover), #FFEE99  , var(--accent-hover));
+    color: #0D0D0D; 
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.btn-danger {  
+    background-color: transparent;  
+    border-color: var(--negative-color);  
+    color: var(--negative-color);
+}
+.btn-danger:hover { background-color: var(--negative-color); color: #FFFFFF; }
+
+
+.input-field {  
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);  
+    padding: 0.75rem var(--space-sm);  
+    width: 100%;  
+    transition: var(--transition-fluid);  
+    background-color: #0D0D0D;  
+    color: var(--text-primary);  
+    font-size: 1rem;  
+    box-shadow: none;
+}
+.input-field:hover { border-color: var(--accent-primary); box-shadow: var(--shadow-sm); }    
+.input-field:focus {  
+    border-color: var(--accent-primary);  
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);  
+    outline: none;  
+}
+.password-container { position: relative; }
+.password-toggle { position: absolute; top: 50%; transform: translateY(-0%); right: var(--space-sm); background: none; border: none; cursor: pointer; color: var(--text-secondary); transition: color 0.2s; padding: 0; }
+.password-toggle:hover { color: var(--text-primary); }
+
+.card {
+    background-color: var(--surface-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--border-radius-lg);
+    position: relative;
+    transition: var(--transition-fluid);
+}
+.card:hover {
+    transform: translateY(-0px);
+}
+
+.tab-container {  
+    display: inline-flex; 
+    gap: var(--space-xs); 
+    padding: var(--space-xs);  
+    background: var(--surface-card-solid);
+    border: 1px solid var(--border-color);  
+    border-radius: var(--border-radius-sm);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    position: relative;
+}
+
+#active-tab-slider {
+    position: absolute;
+    top: var(--space-xs);
+    left: 0;
+    height: calc(100% - (var(--space-xs) * 2));
+    border-radius: 6px;
+    background: linear-gradient(45deg, #B3781C, #FFEE99 , #62400C);
+    box-shadow: 0 2px 8px -2px var(--accent-primary);
+    z-index: 1;
+    background: linear-gradient(45deg, var(--accent-hover), #FFEE99  , var(--accent-hover));
+    background-size: 250% auto;
+    color: #0D0D0D;  
+    border-color: transparent;
+    transition: 0.5s;
+}
+
+.main-tab-button {  
+    padding: 0.6rem 1.25rem;  
+    font-weight: 600;  
+    font-size: 0.9rem;  
+    cursor: pointer;  
+    border: 1px solid transparent;  
+    border-radius: var(--border-radius-sm);
+    background-color: transparent;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 2;
+    transition: all 1s ease-in-out;
+}
+.main-tab-button.active {  
+    color: #0D0D0D; 
+    transition: all 1s ease-in-out;
+    animation: gradient-animation 8s ease infinite;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+.main-tab-button.active:hover { color: #0D0D0D;
+    animation: gradient-animation 8s ease infinite;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    transition: all 1s ease-in-out;
+
+}
+.hidden { display: none !important; }
+.loader { border: 4px solid rgba(212, 175, 55, 0.2); border-top: 4px solid var(--accent-primary); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.month-card {  
+    border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); padding: var(--space-md);  
+    text-align: center; cursor: pointer; transition: var(--transition-fluid);  
+    background-color: var(--surface-card-solid);
+    box-shadow: var(--shadow-sm);
+}
+.month-card:hover { transform: translateY(-0px); border-color: var(--accent-primary); box-shadow: var(--shadow-md); }
+.month-card.profit { border-left: 4px solid var(--positive-color); }
+.month-card.loss { border-left: 4px solid var(--negative-color); }
+.month-name { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+.month-result { font-size: 1.25rem; font-weight: 700; margin-top: var(--space-xs); }
+
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(13, 13, 13, 0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 1500; opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; }
+.modal-overlay.active { opacity: 1; visibility: visible; }
+.modal-content { background-color: var(--surface-card); border: 1px solid var(--border-color); padding: var(--space-lg); border-radius: var(--border-radius-lg); max-width: 90%; width: 800px; max-height: 90vh; overflow-y: auto; transform: scale(0.95); transition: all 0.3s ease-in-out; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
+.modal-overlay.active .modal-content { transform: scale(1); }
+
+.important-note { margin-top: var(--space-md); padding: var(--space-sm) var(--space-md); border-radius: var(--border-radius-sm); background-color: rgba(0, 0, 0, 0.5); border: 2px solid var(--border-color); border-left: 4px solid var(--warning-color); transition: var(--transition-fluid);  }
+.important-note p:first-child { color: var(--warning-color); font-weight: 600;}
+.important-note p:last-child { color: var(--text-secondary); opacity: 0.9;}
+
+#login-screen, #register-screen, #no-access-screen { background-color: var(--bg-primary); display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: fixed; top: 0; left: 0; z-index: 2000; }
+.login-box { text-align: center; width: 100%; max-width: 700px; animation: fadeInUp 0.5s var(--transition-fluid) both; background-color: var(--surface-card); border: 1px solid var(--border-color); padding: var(--space-lg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-lg); }
+.message { margin-top: var(--space-sm); font-weight: 500; display: none; padding: 0.75rem; border-radius: var(--border-radius-sm); font-size: 0.9rem; }
+.message.error { color: var(--negative-color); background-color: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3); }
+.message.success { color: var(--positive-color); background-color: rgba(40, 167, 69, 0.1); border: 1px solid rgba(40, 167, 69, 0.3); }
+
+#auth-container { position: fixed; top: var(--space-sm); right: var(--space-sm); z-index: 1001; background: var(--surface-card); backdrop-filter: blur(10px); padding: var(--space-xs) 0.75rem; border-radius: var(--border-radius-sm); display: flex; align-items: center; gap: var(--space-sm); border: 1px solid var(--border-color); box-shadow: var(--shadow-md); }
+
+#loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--bg-primary); z-index: 1999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: opacity 0.5s ease-out; }
+
+#tour-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 9998; opacity: 0; transition: opacity 0.3s ease-out;
+    pointer-events: none;
+}
+#tour-overlay.active { opacity: 1; pointer-events: all; }
+.tour-highlight { position: absolute; transition: var(--transition-fluid); border: 2px solid var(--accent-primary); box-shadow: 0 0 25px 5px rgba(212, 175, 55, 0.3); border-radius: var(--border-radius-lg); }
+.tour-tooltip { position: absolute; z-index: 9999; background: var(--surface-card-solid); border-radius: var(--border-radius-lg); border: 1px solid var(--border-color); width: 320px; padding: var(--space-md); animation: fadeInUp 0.4s var(--transition-fluid) both; box-shadow: var(--shadow-lg); }
+.tour-nav { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); margin-top: var(--space-md); padding-top: var(--space-sm);}
+
+#terms-modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;  
+    background-color: rgba(13, 13, 13, 0.8);
+    backdrop-filter: blur(8px);  
+    display: none;
+    align-items: center;  
+    justify-content: center;  
+    z-index: 2500;
+}
+.terms-text-container {
+    max-height: 55vh; overflow-y: auto;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    padding: var(--space-md); border-radius: var(--border-radius-sm);
+    margin-bottom: var(--space-md); color: var(--text-secondary); line-height: 1.7;
+}
+.terms-text-container p { margin-bottom: var(--space-sm); }
+.terms-text-container strong { color: var(--text-primary); }
+.terms-text-container h4 { color: var(--accent-primary); text-align: center; font-size: 1.25rem; margin-bottom: var(--space-md);}
+
+.custom-checkbox-label { display: flex; align-items: center; cursor: pointer; font-size: 1rem; color: var(--text-primary); }
+.custom-checkbox {
+    appearance: none; width: 1.25rem; height: 1.25rem; border: 2px solid var(--border-color);
+    border-radius: 4px; margin-right: var(--space-xs); position: relative;
+    transition: var(--transition-fluid); background-color: var(--surface-card-solid);
+}
+.custom-checkbox:checked { background-color: var(--accent-primary); border-color: var(--accent-primary); }
+.custom-checkbox:checked::after {
+    content: '✓'; font-size: 1rem; color: #0D0D0D; position: absolute;
+    top: 50%; left: 50%; transform: translate(-0%, -0%); font-weight: bold;
+}
+
+.kpi-card {
+    background-color: var(--surface-card-solid);
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fluid);
+    text-align: center;
+}
+.kpi-card:hover {
+    transform: translateY(-0px);
+    box-shadow: 0 0 15px  #d4af3758;
+    border-color: rgba(212, 175, 55, 0.5);
+}
+.kpi-card-title {
+    font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-xs);
+}
+.kpi-card-value {
+    font-size: 1.75rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;
+}
+
+/* Gráfico */
+canvas { filter: brightness(1.1); }
+
+/* Tabelas com novo design */
+table th {
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+table td {
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    color: var(--text-primary);
+}
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+table th:last-child, table td:last-child {
+    text-align: right;
+}
+table th.text-center, table td.text-center {
+    text-align: center;
+}
+
+/* === PASSO 2: REFINAMENTOS ADICIONAIS E AJUSTES FINOS === */
+
+/* REFINAMENTO 1: Hierarquia de Botões Mais Clara */
+
+/* Botão Primário (sem alterações, já está bom) */
+
+
+
+/* REFINAMENTO 2: Estilo para os Novos Ícones da Tabela */
+.table-icon-button {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    color: var(--text-secondary); /* Cor padrão dos ícones */
+    transition: var(--transition-fluid);
+    border-radius: 50%;
+}
+
+.table-icon-button:hover {
+    color: var(--accent-primary); /* Ícone fica dourado no hover */
+    background-color: rgba(212, 175, 55, 0.15);
+    transform: scale(1.1);
+}
+
+
+/* REFINAMENTO 3: Tabelas Ultra Clean */
+table {
+    border-collapse: collapse; /* Essencial para o estilo limpo */
+    width: 100%;
+}
+table th {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0.75rem;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em; /* Mais espaçamento para um look premium */
+    color: var(--text-secondary);
+}
+table td {
+    padding: 1.25rem 0.75rem; /* Mais espaçamento vertical */
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1); /* Linha divisória mais sutil */
+    color: var(--text-primary);
+}
+table tbody tr:hover td {
+    background-color: rgba(26, 26, 26, 0.5);
+}
+
+
+/* REFINAMENTO 4: Foco do Input Mais Elegante */
+.input-field:focus {  
+    border-color: var(--accent-primary);  
+    /* Sombra interna sutil para dar profundidade, em vez da externa */
+    box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.2); 
+    outline: none;  
+}
+
+/* Monthly Assets Grid */
+.monthly-assets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    flex: 1;
+    align-content: start;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.monthly-asset-card {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 1.2rem 1rem;
+    border-left: 3px solid var(--accent-primary);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    text-align: center;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: var(--transition-fluid);
+}
+
+.monthly-asset-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.monthly-asset-card .month-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.monthly-asset-card .best-asset {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0.5rem 0;
+    line-height: 1.2;
+}
+
+.monthly-asset-card .asset-profit {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--positive-color);
+    margin-top: 0.25rem;
+}
+
+/* ======================================================================= */
+/* CORREÇÃO DO ÍCONE DO CALENDÁRIO (PARA TEMA ESCURO) */
+/* ======================================================================= */
+
+/* 1. Prepara o campo de data para receber nosso ícone */
+input[type="date"].input-field {
+    position: relative;
+    /* Adiciona espaço à direita para o novo ícone não sobrepor o texto */
+    padding-right: 2.5rem; 
+}
+
+/* 2. Adiciona nosso ícone de calendário BRANCO como uma imagem de fundo */
+input[type="date"].input-field {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23F0F0F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center; /* Posiciona o ícone à direita */
+}
+
+/* 3. Esconde o ícone de calendário PRETO padrão do navegador */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    /* Deixa o ícone original completamente transparente, mas ainda funcional */
+    opacity: 0;
+    cursor: pointer;
+
+    /* Faz a área clicável do ícone invisível cobrir todo o campo para facilitar o clique */
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 600px) {
+    .content-wrapper { padding: var(--space-lg) var(--space-sm); }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    .card { padding: var(--space-md); }
+    .kpi-card { padding: var(--space-sm); }
+    .kpi-card-value { font-size: 1.5rem; }
+    .modal-content { width: 90%; padding: var(--space-md); }
+    .tab-container { gap: var(--space-xs); padding: var(--space-xs);  }
+    .main-tab-button { padding: 0.5rem 1rem; font-size: 0.85rem;}
+
+    .login-box { max-width: 90%; padding: var(--space-md); }
+    #auth-container { top: var(--space-xs); right: var(--space-xs); padding: var(--space-xs) 0.5rem; }
+    #auth-container span { display: none;  }
+    #loading-overlay { padding: var(--space-md); }
+    #loading-overlay h2 { font-size: 1.25rem; }
+    .month-card { padding: var(--space-sm); }
+    .month-name { font-size: 0.9rem; }
+    .month-result { font-size: 1.1rem; }
+    .kpi-card-title { font-size: 0.75rem; }
+    .terms-text-container { max-height: 50vh; }
+    .modal-overlay { padding: var(--space-sm); }
+    .modal-content { max-height: 80vh; }
+
+    /* Wrapped Mobile Styles */
+    .mySwiper .swiper-slide {
+        width: 320px;
+        height: 600px;
+    }
+
+    .mySwiper .swiper-slide-active {
+        transform: scale(1);
+    }
+
+    .slide-content {
+        padding: 1.5rem 1.2rem;
+    }
+
+    .monthly-assets-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+
+}/* === ESTILOS PARA O RESUMO ANUAL (WRAPPED) - DESIGN MINIMALISTA PROFISSIONAL === */
+
+/* Container Principal */
+.wrapped-container {
+  width: 100%;
+  min-height: 100vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem 0 1rem;
+  position: relative;
+}
+
+.wrapped-title-main {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+  margin-top: 0.5rem;
+}
+
+.wrapped-subtitle-main {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 4rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+/* Swiper Container */
+.mySwiper {
+  width: 100%;
+  max-width: 100%;
+  padding: 20px 0 30px;
+  position: relative;
+  margin-bottom: 60px;
+  min-height: 720px;
+}
+
+.mySwiper .swiper-wrapper {
+  align-items: center;
+}
+
+.mySwiper .swiper-slide {
+  width: 580px;
+  height: 750px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  opacity: 0.6;
+  transform: scale(0.85);
+}
+
+.mySwiper .swiper-slide-active {
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 16px 48px rgba(212, 175, 55, 0.15);
+  border-color: var(--accent-primary);
+  z-index: 10;
+}
+
+/* Slide de Abertura */
+.wrapped-slide-intro {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+  color: #0D0D0D;
+  border: none;
+}
+
+/* Slides Normais */
+.wrapped-slide {
+  background: var(--surface-card);
+}
+
+.slide-content {
+  padding: 2rem 1.8rem;
+  height: 100%;
+  width: 100%;  
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.slide-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1.0rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Slide de Abertura - Conteúdo */
+.intro-content {
+  text-align: center;
+  color:var(--accent-primary);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro-title {
+  font-size: 2.05rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.intro-subtitle {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.intro-year {
+  font-size: 5rem;
+    color: var(--text-primary);
+  font-weight: 900;
+  opacity: 0.1;
+  position: absolute;
+  bottom: 0rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Card Principal de Resultado */
+.main-result-card {
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid var(--accent-primary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.result-label {
+    font-size: 0.8rem;
+    color: var(--accent-primary);
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.result-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* Grid de Métricas Combinado */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    width: 100%;
+    flex: 1;
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 0.8rem 0.6rem;
+    text-align: center;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 65px;
+    transition: var(--transition-fluid);
+}
+
+.metric-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-1px);
+}
+
+.metric-label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+
+
+.performance-card {
+    background: rgb(252, 252, 252, 0.73);
+    border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+    padding: 1.2rem;
+    border: 1px solid transparent;
+  border-color: var(--border-color);
+
+}
+.performance-card.positive {
+    border-color: var(--border-color);
+}
+.performance-card.negative {
+    border-color: var(--border-color);
+}
+.performance-label {
+    font-size: 0.8rem;
+  color: var(--text-primary);
+
+    margin-bottom: 0.5rem;
+}
+.performance-value {
+    font-size: 1.3rem;
+  color: var(--text-primary);
+
+    font-weight: 600;
+}
+
+/* Slide 3: Top 5 Ativos */
+.assets-ranking {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    height: 100px;
+margin-top: 28%;
+}
+.asset-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 0.8rem 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 3px solid var(--accent-primary);
+    height: 80px;
+}
+.asset-rank-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.asset-rank {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.asset-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: left;
+}
+.asset-profit {
+    font-weight: 600;
+    color: var(--positive-color);
+}
+
+/* Slide 4: Evolução Mensal */
+.chart-container {
+    width: 100%;
+    height: 220px;
+    margin-top: 120px;
+    margin-bottom: 1.2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    padding: 0.4rem;
+    flex-shrink: 0;
+}
+.month-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    flex-shrink: 0;
+}
+.month-card {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70px;
+}
+
+.month-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.month-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.1;
+}
+
+/* Slide 5: Mês a Mês */
+.monthly-assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Ajuste para responsividade e garantir que todos os meses caibam */
+    gap: 0.5rem;
+    width: 100%;
+    overflow-y: hidden;
+    align-content: center;
+        margin-top: 40px;
+
+}
+.monthly-asset-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 0.8rem 0.5rem; /* Ajuste de padding */
+    text-align: center;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70px;
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total */
+}
+.month-label {
+    font-size: 0.8rem; /* Ajuste de tamanho */
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem; /* Ajuste de margem */
+}
+.best-asset {
+    font-size: 0.9rem; /* Ajuste de tamanho */
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0.25rem 0;
+}
+
+/* Slide 6: Resumo Final / Exportação */
+.summary-card-export {
+   width: 100%;
+    max-width: 420px;
+  max-height: 610px;
+    background: #1C1C1C;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 1.2rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+.summary-body {
+    text-align: center;
+}
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.summary-footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Additional Wrapped Styles */
+.wrapped-title-main {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.wrapped-subtitle-main {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 3rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* === ESTILOS PARA O RESUMO ANUAL (WRAPPED) - CARD FINAL === */
+
+.wrapped-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+}
+
+.final-summary-card {
+    width: 100%;
+    max-width: 420px;
+  max-height: 610px;
+    background: #1C1C1C;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 1.2rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+.final-card-header {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+
+.final-card-main-metric {
+    text-align: center;
+}
+
+.main-metric-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+.main-metric-value {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.final-card-secondary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.secondary-metric-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid transparent;
+}
+.secondary-metric-card.positive {
+    border-color: var(--positive-color);
+}
+.secondary-metric-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+     font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem; /* Aumenta um pouco o espaço entre label e valor */
+    line-height: 1.2; /* Adiciona uma altura de linha explícita */
+}
+.secondary-metric-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+     font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.1; /* Adiciona uma altura de linha explícita */
+}
+
+/* CSS CORRIGIDO E FINAL para o alinhamento do ativo */
+.final-card-top-asset {
+    display: grid; /* Mude para GRID */
+    grid-template-columns: 1fr auto; /* << A MÁGICA ACONTECE AQUI */
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 0.8rem 1.2rem;
+    border-left: 3px solid var(--accent-primary);
+}
+.top-asset-rank {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+.top-asset-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: left;
+}
+.top-asset-profit-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.top-asset-profit-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.final-card-chart-container {
+    width: 100%;
+    height: 180px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem;
+}
+
+.final-card-footer {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    color: var(--text-primary);
+    letter-spacing: 0.2em;
+}
+
+.action-buttons {
+    text-align: center;
+}
+
+/* Logo X no final dos cards */
+.card-logo-x {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--accent-primary);
+  opacity: 0.3;
+}
+
+.wrapped-slide.gold-background .card-logo-x {
+  color: rgba(0, 0, 0, 0.2);
+}
+
+        /* --- NEW STYLES FOR INTRO SLIDE V2 --- */
+        /* This replaces the old .wrapped-slide-intro */
+        .wrapped-slide-intro-v2 {
+            background: #191919;
+            border: 1px solid #9C7B0E;
+            border-radius: 43px; /* From Figma */
+            color: #FFFFFF;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+            box-sizing: border-box;
+        }
+
+        .intro-v2-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Positions header at top, footer at bottom */
+            align-items: center;
+            text-align: center;
+        }
+        
+        .intro-v2-header, .intro-v2-footer {
+            flex-shrink: 0; /* Prevents text from shrinking */
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .intro-v2-header {
+            font-size: 2.5rem;
+        }
+        
+        .intro-v2-footer {
+            font-size: 3rem;
+            font-family: serif; /* Using a serif font to mimic 'Copperplate' */
+            font-weight: bold;
+        }
+        
+        .intro-v2-logo {
+            font-size: 30rem; /* Huge font size for the 'X' */
+            font-weight: 900;
+            line-height: 1;
+            
+            
+            /* Golden Gradient Text Effect */
+            background: linear-gradient(90deg, #D4AF37 0%, #FFEE99 47.6%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-emphasis-color: transparent;
+
+            /* Glow Effect */
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Container Principal e Swiper (sem alterações) */
+        .wrapped-container { width: 100%; min-height: 100vh; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 0.5rem 0 1rem; position: relative; overflow-x: hidden; }
+        .wrapped-title-main { font-size: 2rem; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 0.25rem; letter-spacing: -0.02em; margin-top: 0.5rem; }
+        .wrapped-subtitle-main { font-size: 1rem; color: var(--text-secondary); text-align: center; margin-bottom: 4rem; opacity: 0.8; font-weight: 400; }
+        .mySwiper { width: 100%; max-width: 100%; padding: 20px 0 30px; position: relative; margin-bottom: 60px; min-height: 720px; }
+        .mySwiper .swiper-wrapper { align-items: center; }
+        .mySwiper .swiper-slide { width: 580px; height: 750px; border-radius: 16px; overflow: hidden; background: var(--surface-card); backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); transition: all 0.4s ease; display: flex; flex-direction: column; opacity: 0.6; transform: scale(0.85); }
+        .mySwiper .swiper-slide-active { opacity: 1; transform: scale(1.1); box-shadow: 0 16px 48px rgba(212, 175, 55, 0.15); border-color: var(--accent-primary); z-index: 10; }
+        
+        /* --- ESTILOS CORRIGIDOS PARA O SLIDE 1 --- */
+        .wrapped-slide-intro-v2 {
+            background: #191919;
+            border: 1px solid #9C7B0E;
+            border-radius: 43px;
+            padding: 0; /* Remove padding for absolute positioning */
+        }
+
+        /* Container para posicionamento */
+        .intro-v2-content {
+            position: relative; /* Base para o posicionamento absoluto */
+            width: 100%;
+            height: 100%;
+        }
+        
+        .intro-v2-header {
+            position: absolute;
+            top: 4rem; /* Distância do topo */
+            left: 50%;
+            transform: translateX(-50%); /* Centraliza horizontalmente */
+            color: #e0e0e0;
+            opacity: 1; /* Efeito "apagado" */
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .intro-v2-footer {
+            position: absolute;
+            bottom: 4rem; /* Distância do fundo */
+            left: 50%;
+            transform: translateX(-50%); /* Centraliza horizontalmente */
+            color: #e0e0e0;
+            opacity: 1; /* Efeito "apagado" */
+            font-family: 'Montserrat', sans-serif; /* Fonte sem serifa */
+            font-size: 3rem;
+            font-weight: bolder;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .intro-v2-logo {
+            position: absolute;
+            top: 29%; /* Posicionamento vertical */
+            left: 16%; /* Posicionamento horizontal */
+        }
+
+        .intro-v2-logo svg {
+            width: 400px;  /* Tamanho definido para o logo */
+            height: auto;
+            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4)); /* Sombra para o SVG */
+            
+        }
+
+        /* Define a cor do logo SVG */
+        .intro-v2-logo .logo-path {
+            fill: var(--accent-primary);
+        }
+
+        /* CSS CORRIGIDO para o alinhamento do ativo */
+.final-card-top-asset {
+    display: flex; /* Mude de grid para flex */
+    justify-content: space-between; /* Empurra os itens para as extremidades */
+    align-items: center; /* Alinha verticalmente */
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 0.8rem 1.2rem;
+    border-left: 3px solid var(--accent-primary);
+}
+
+/* Nova regra para o container do rank e nome */
+.top-asset-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Espaçamento entre "#1" e "XAUUSD" */
+}
+
+.top-asset-rank {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+.top-asset-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: left;
+}
+.top-asset-profit-value {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1.1rem; /* Ajuste opcional de tamanho */
+}
+
+/* Remova ou ignore a regra .top-asset-profit-label */
+
+.export-summary-card {
+    width: 100%;
+    max-width: 420px;
+  max-height: 610px;
+    background: #1C1C1C;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 1.2rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+.export-card-header {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+.export-card-main-metric {
+    text-align: center;
+}
