@@ -1992,7 +1992,9 @@ const tourSteps = [
     { element: '#tour-step-1', title: 'Navegação Principal', intro: 'Alterne entre os dashboards para suas análises.' },
     { element: '#tour-step-2', title: 'Adicionar Transações', intro: 'Preencha os dados de suas movimentações de capital (envios e retiradas).' },
     { element: '#tour-step-4', title: 'Processar Análise', intro: 'Clique aqui para executar os cálculos após preencher os dados acima.' },
-    { element: '#main-tab-ir', title: 'Análise de IR', intro: 'Mude para este dashboard para analisar o imposto sobre suas operações de trade.' },
+    // <-- ALTERAÇÃO: Corrigido o seletor para pegar o botão específico, e não a div.
+    // Você precisará adicionar o id="tour-step-3" no seu botão "Apuração Anual de Resultados" no HTML.
+    { element: '#tour-step-3', title: 'Análise de IR', intro: 'Mude para este dashboard para analisar o imposto sobre suas operações de trade.' },
     { element: '#tour-step-5', title: 'Relatório de Operações', intro: 'Importe seu relatório da corretora para o cálculo do IR.' }
 ];
 let currentStep = 0;
@@ -2027,7 +2029,7 @@ function showStep(index) {
     }
 
     // Garante que a aba correta está visível ANTES de medir a posição
-    if (step.element.includes('ir') || step.element.includes('tour-step-5')) { 
+    if (step.element.includes('tour-step-3') || step.element.includes('tour-step-5')) { // <-- ALTERAÇÃO: Ajustado o if para o novo ID
         showMainTab('ir'); 
     } else { 
         showMainTab('cambial'); 
@@ -2039,12 +2041,18 @@ function showStep(index) {
     // Espera a rolagem e a troca de aba terminarem antes de calcular a posição
     setTimeout(() => {
         const rect = targetElement.getBoundingClientRect();
+        
+        // <-- ALTERAÇÃO: Define um "padding" para o destaque ficar mais espaçado.
+        const highlightPadding = 10; 
 
         // Posiciona o destaque
-        tourHighlight.style.width = `${rect.width + 12}px`;
-        tourHighlight.style.height = `${rect.height + 12}px`;
-        tourHighlight.style.top = `${rect.top - 6}px`;
-        tourHighlight.style.left = `${rect.left - 6}px`;
+        tourHighlight.style.width = `${rect.width + (highlightPadding * 2)}px`;
+        tourHighlight.style.height = `${rect.height + (highlightPadding * 2)}px`;
+        tourHighlight.style.top = `${rect.top - highlightPadding}px`;
+        tourHighlight.style.left = `${rect.left - highlightPadding}px`;
+
+        // <-- ALTERAÇÃO: Copia o arredondamento do elemento alvo para o destaque.
+        tourHighlight.style.borderRadius = window.getComputedStyle(targetElement).borderRadius;
 
         // Atualiza o texto do tooltip
         tourTitle.textContent = step.title;
@@ -2073,7 +2081,7 @@ function showStep(index) {
     }, 400); // 400ms é um bom tempo para a rolagem suave terminar
 }
 
-// Listeners para os botões do tour
+// Listeners para os botões do tour (sem alterações aqui)
 if (tourNextBtn) {
     tourNextBtn.addEventListener('click', () => { 
         if (currentStep < tourSteps.length - 1) { 
