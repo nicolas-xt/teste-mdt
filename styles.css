@@ -1175,7 +1175,7 @@ margin-top: 28%;
             align-items: center;
             text-align: center;
         }
-        
+
         .intro-v2-header, .intro-v2-footer {
             flex-shrink: 0; /* Prevents text from shrinking */
             font-weight: 700;
@@ -1186,19 +1186,19 @@ margin-top: 28%;
         .intro-v2-header {
             font-size: 2.5rem;
         }
-        
+
         .intro-v2-footer {
             font-size: 3rem;
             font-family: serif; /* Using a serif font to mimic 'Copperplate' */
             font-weight: bold;
         }
-        
+
         .intro-v2-logo {
             font-size: 30rem; /* Huge font size for the 'X' */
             font-weight: 900;
             line-height: 1;
-            
-            
+
+
             /* Golden Gradient Text Effect */
             background: linear-gradient(90deg, #D4AF37 0%, #FFEE99 47.6%, #D4AF37 100%);
             -webkit-background-clip: text;
@@ -1218,7 +1218,7 @@ margin-top: 28%;
         .mySwiper .swiper-wrapper { align-items: center; }
         .mySwiper .swiper-slide { width: 580px; height: 750px; border-radius: 16px; overflow: hidden; background: var(--surface-card); backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); transition: all 0.4s ease; display: flex; flex-direction: column; opacity: 0.6; transform: scale(0.85); }
         .mySwiper .swiper-slide-active { opacity: 1; transform: scale(1.1); box-shadow: 0 16px 48px rgba(212, 175, 55, 0.15); border-color: var(--accent-primary); z-index: 10; }
-        
+
         /* --- ESTILOS CORRIGIDOS PARA O SLIDE 1 --- */
         .wrapped-slide-intro-v2 {
             background: #191919;
@@ -1233,7 +1233,7 @@ margin-top: 28%;
             width: 100%;
             height: 100%;
         }
-        
+
         .intro-v2-header {
             position: absolute;
             top: 4rem; /* Distância do topo */
@@ -1246,7 +1246,7 @@ margin-top: 28%;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
-        
+
         .intro-v2-footer {
             position: absolute;
             bottom: 4rem; /* Distância do fundo */
@@ -1260,7 +1260,7 @@ margin-top: 28%;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
-        
+
         .intro-v2-logo {
             position: absolute;
             top: 29%; /* Posicionamento vertical */
@@ -1271,7 +1271,7 @@ margin-top: 28%;
             width: 400px;  /* Tamanho definido para o logo */
             height: auto;
             filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4)); /* Sombra para o SVG */
-            
+
         }
 
         /* Define a cor do logo SVG */
