@@ -286,7 +286,6 @@ async function handleAcceptTerms() {
 
 // SUBSTITUA TODO O SEU BLOCO DE CÓDIGO DO TUTORIAL POR ESTE:
 
-// --- LÓGICA DO TOUR E GERAL ---
 const tourOverlay = document.getElementById('tour-overlay');
 const tourHighlight = document.querySelector('.tour-highlight');
 const tourTooltip = document.querySelector('.tour-tooltip');
@@ -351,18 +350,28 @@ function showStep(index) {
     setTimeout(() => {
         const rect = targetElement.getBoundingClientRect();
 
-        // Posiciona o destaque
-        tourHighlight.style.width = `${rect.width + 12}px`;
-        tourHighlight.style.height = `${rect.height + 12}px`;
-        tourHighlight.style.top = `${rect.top - 6}px`;
-        tourHighlight.style.left = `${rect.left - 6}px`;
+        // --- MELHORIAS VISUAIS APLICADAS AQUI ---
+
+        // 1. Define um espaçamento (padding) maior para o destaque.
+        const highlightPadding = 15; // Você pode ajustar este valor (ex: 10, 20)
+
+        // Posiciona o destaque com o novo espaçamento
+        tourHighlight.style.width = `${rect.width + (highlightPadding * 2)}px`;
+        tourHighlight.style.height = `${rect.height + (highlightPadding * 2)}px`;
+        tourHighlight.style.top = `${rect.top - highlightPadding}px`;
+        tourHighlight.style.left = `${rect.left - highlightPadding}px`;
+
+        // 2. Copia o arredondamento da borda do elemento alvo para o destaque
+        tourHighlight.style.borderRadius = window.getComputedStyle(targetElement).borderRadius;
+
+        // --- FIM DAS MELHORIAS VISUAIS ---
 
         // Atualiza o texto do tooltip
         tourTitle.textContent = step.title;
         tourText.textContent = step.intro;
         tourStepCounter.textContent = `${index + 1} / ${tourSteps.length}`;
 
-        // Lógica inteligente para posicionar o tooltip acima ou abaixo do elemento
+        // Lógica inteligente para posicionar o tooltip
         const tooltipHeight = tourTooltip.offsetHeight;
         const tooltipWidth = tourTooltip.offsetWidth;
         if ((rect.bottom + tooltipHeight + 20) > window.innerHeight) { 
@@ -371,7 +380,7 @@ function showStep(index) {
             tourTooltip.style.top = `${rect.bottom + 15}px`; 
         }
 
-        // Centraliza o tooltip horizontalmente, mas o mantém dentro da tela
+        // Centraliza o tooltip horizontalmente
         let tooltipLeft = rect.left + (rect.width / 2) - (tooltipWidth / 2);
         if (tooltipLeft < 20) tooltipLeft = 20;
         if (tooltipLeft + tooltipWidth > window.innerWidth - 20) tooltipLeft = window.innerWidth - tooltipWidth - 20;
@@ -381,7 +390,7 @@ function showStep(index) {
         tourPrevBtn.style.display = index === 0 ? 'none' : 'inline-flex';
         tourNextBtn.textContent = index === tourSteps.length - 1 ? 'Finalizar' : 'Próximo';
 
-    }, 400); // 400ms é um bom tempo para a rolagem suave terminar
+    }, 400); 
 }
 
 // Listeners para os botões do tour
