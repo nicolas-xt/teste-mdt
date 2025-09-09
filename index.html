@@ -1987,133 +1987,128 @@ const tourNextBtn = document.getElementById('tour-next-btn');
 const tourSkipBtn = document.getElementById('tour-skip-btn');
 const openTutorialButton = document.getElementById('open-tutorial-button');
 
-// Usando o seu array de steps, que está correto para o seu HTML
+// <-- ALTERAÇÃO: Array de passos reordenado para uma sequência lógica (1, 2, 3, 4, 5)
+// Isso corrige o problema dos passos 4 e 5 "faltando".
 const tourSteps = [
     { element: '#tour-step-1', title: 'Navegação Principal', intro: 'Alterne entre os dashboards para suas análises.' },
     { element: '#tour-step-2', title: 'Adicionar Transações', intro: 'Preencha os dados de suas movimentações de capital (envios e retiradas).' },
-    { element: '#tour-step-4', title: 'Processar Análise', intro: 'Clique aqui para executar os cálculos após preencher os dados acima.' },
-    // <-- ALTERAÇÃO: Corrigido o seletor para pegar o botão específico, e não a div.
-    // Você precisará adicionar o id="tour-step-3" no seu botão "Apuração Anual de Resultados" no HTML.
+    // <-- AÇÃO NECESSÁRIA NO HTML PARA ESTE PASSO FUNCIONAR! (Veja explicação abaixo)
     { element: '#tour-step-3', title: 'Análise de IR', intro: 'Mude para este dashboard para analisar o imposto sobre suas operações de trade.' },
+    { element: '#tour-step-4', title: 'Processar Análise', intro: 'Clique aqui para executar os cálculos após preencher os dados acima.' },
     { element: '#tour-step-5', title: 'Relatório de Operações', intro: 'Importe seu relatório da corretora para o cálculo do IR.' }
 ];
 let currentStep = 0;
 
-function startTour() { 
-    currentStep = 0; 
-    tourOverlay.style.display = 'block'; 
-    // Pequeno delay para o display:block ser aplicado antes de iniciar a animação
+function startTour() {
+    currentStep = 0;
+    tourOverlay.style.display = 'block';
     setTimeout(() => {
         showStep(currentStep)
-        tourOverlay.classList.add('active'); 
-    }, 50); 
-    localStorage.setItem('xtributationTutorialSeen', 'true'); 
+        tourOverlay.classList.add('active');
+    }, 50);
+    localStorage.setItem('xtributationTutorialSeen', 'true');
 }
 
-function endTour() { 
-    tourOverlay.classList.remove('active'); 
-    // Espera a animação de fade-out terminar para esconder o elemento
+function endTour() {
+    tourOverlay.classList.remove('active');
     setTimeout(() => {
         tourOverlay.style.display = 'none';
-    }, 300); 
+    }, 300);
 }
 
 function showStep(index) {
+    // Garante que o passo atual seja válido
+    if (index < 0 || index >= tourSteps.length) {
+        endTour();
+        return;
+    }
+    
+    currentStep = index; // <-- Adicionado para garantir sincronia
     const step = tourSteps[index];
-    const targetElement = document.querySelector(step.element);
-
-    if (!targetElement) { 
-        console.warn("Elemento do tour não encontrado:", step.element);
-        endTour(); 
-        return; 
+    
+    // Garante que a aba correta está visível ANTES de procurar o elemento
+    if (step.element.includes('tour-step-3') || step.element.includes('tour-step-5')) {
+        showMainTab('ir');
+    } else {
+        showMainTab('cambial');
     }
-
-    // Garante que a aba correta está visível ANTES de medir a posição
-    if (step.element.includes('tour-step-3') || step.element.includes('tour-step-5')) { // <-- ALTERAÇÃO: Ajustado o if para o novo ID
-        showMainTab('ir'); 
-    } else { 
-        showMainTab('cambial'); 
-    }
-
-    // Rola o elemento para a vista
-    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-
-    // Espera a rolagem e a troca de aba terminarem antes de calcular a posição
+    
+    // Pequeno delay para a troca de aba renderizar antes de procurar o elemento
     setTimeout(() => {
-        const rect = targetElement.getBoundingClientRect();
-        
-        // <-- ALTERAÇÃO: Define um "padding" para o destaque ficar mais espaçado.
-        const highlightPadding = 10; 
+        const targetElement = document.querySelector(step.element);
 
-        // Posiciona o destaque
-        tourHighlight.style.width = `${rect.width + (highlightPadding * 2)}px`;
-        tourHighlight.style.height = `${rect.height + (highlightPadding * 2)}px`;
-        tourHighlight.style.top = `${rect.top - highlightPadding}px`;
-        tourHighlight.style.left = `${rect.left - highlightPadding}px`;
-
-        // <-- ALTERAÇÃO: Copia o arredondamento do elemento alvo para o destaque.
-        tourHighlight.style.borderRadius = window.getComputedStyle(targetElement).borderRadius;
-
-        // Atualiza o texto do tooltip
-        tourTitle.textContent = step.title;
-        tourText.textContent = step.intro;
-        tourStepCounter.textContent = `${index + 1} / ${tourSteps.length}`;
-
-        // Lógica inteligente para posicionar o tooltip acima ou abaixo do elemento
-        const tooltipHeight = tourTooltip.offsetHeight;
-        const tooltipWidth = tourTooltip.offsetWidth;
-        if ((rect.bottom + tooltipHeight + 20) > window.innerHeight) { 
-            tourTooltip.style.top = `${rect.top - tooltipHeight - 15}px`; 
-        } else { 
-            tourTooltip.style.top = `${rect.bottom + 15}px`; 
+        if (!targetElement) {
+            console.error("Elemento do tour não encontrado:", step.element, ". Verifique se o ID está correto no HTML e se a aba correta está visível.");
+            endTour();
+            return;
         }
 
-        // Centraliza o tooltip horizontalmente, mas o mantém dentro da tela
-        let tooltipLeft = rect.left + (rect.width / 2) - (tooltipWidth / 2);
-        if (tooltipLeft < 20) tooltipLeft = 20;
-        if (tooltipLeft + tooltipWidth > window.innerWidth - 20) tooltipLeft = window.innerWidth - tooltipWidth - 20;
-        tourTooltip.style.left = `${tooltipLeft}px`;
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
 
-        // Atualiza os botões de navegação
-        tourPrevBtn.style.display = index === 0 ? 'none' : 'inline-flex';
-        tourNextBtn.textContent = index === tourSteps.length - 1 ? 'Finalizar' : 'Próximo';
+        setTimeout(() => {
+            const rect = targetElement.getBoundingClientRect();
+            
+            // <-- ALTERAÇÃO: Aumentei o padding para 15px para o efeito ficar mais visível.
+            const highlightPadding = 15;
 
-    }, 400); // 400ms é um bom tempo para a rolagem suave terminar
+            tourHighlight.style.width = `${rect.width + (highlightPadding * 2)}px`;
+            tourHighlight.style.height = `${rect.height + (highlightPadding * 2)}px`;
+            tourHighlight.style.top = `${rect.top - highlightPadding}px`;
+            tourHighlight.style.left = `${rect.left - highlightPadding}px`;
+            tourHighlight.style.borderRadius = window.getComputedStyle(targetElement).borderRadius;
+
+            tourTitle.textContent = step.title;
+            tourText.textContent = step.intro;
+            tourStepCounter.textContent = `${index + 1} / ${tourSteps.length}`;
+
+            const tooltipHeight = tourTooltip.offsetHeight;
+            const tooltipWidth = tourTooltip.offsetWidth;
+            if ((rect.bottom + tooltipHeight + 20) > window.innerHeight) {
+                tourTooltip.style.top = `${rect.top - tooltipHeight - 15}px`;
+            } else {
+                tourTooltip.style.top = `${rect.bottom + 15}px`;
+            }
+
+            let tooltipLeft = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+            if (tooltipLeft < 20) tooltipLeft = 20;
+            if (tooltipLeft + tooltipWidth > window.innerWidth - 20) tooltipLeft = window.innerWidth - tooltipWidth - 20;
+            tourTooltip.style.left = `${tooltipLeft}px`;
+
+            tourPrevBtn.style.display = index === 0 ? 'none' : 'inline-flex';
+            tourNextBtn.textContent = index === tourSteps.length - 1 ? 'Finalizar' : 'Próximo';
+
+        }, 400); 
+    }, 100); // Delay para a troca de aba
 }
 
-// Listeners para os botões do tour (sem alterações aqui)
+
+// Listeners (sem alterações)
 if (tourNextBtn) {
-    tourNextBtn.addEventListener('click', () => { 
-        if (currentStep < tourSteps.length - 1) { 
-            currentStep++; 
-            showStep(currentStep); 
-        } else { 
-            endTour(); 
-        } 
+    tourNextBtn.addEventListener('click', () => {
+        if (currentStep < tourSteps.length - 1) {
+            showStep(currentStep + 1);
+        } else {
+            endTour();
+        }
     });
 }
-
 if (tourPrevBtn) {
-    tourPrevBtn.addEventListener('click', () => { 
-        if (currentStep > 0) { 
-            currentStep--; 
-            showStep(currentStep); 
-        } 
+    tourPrevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            showStep(currentStep - 1);
+        }
     });
 }
-
 if (tourSkipBtn) {
     tourSkipBtn.addEventListener('click', endTour);
 }
-
 if (tourOverlay) {
-    tourOverlay.addEventListener('click', (e) => { 
+    tourOverlay.addEventListener('click', (e) => {
         if (e.target === tourOverlay) {
-            endTour(); 
+            endTour();
         }
     });
 }
-
 // === INICIALIZAÇÃO DOS EVENT LISTENERS ===
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM carregado, inicializando event listeners...');
