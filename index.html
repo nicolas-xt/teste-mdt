@@ -513,7 +513,7 @@ table tbody tr:hover td {
 .monthly-asset-card .asset-profit {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--positive-color);
+    color: var(--accent-primary);
     margin-top: 0.25rem;
 }
 
@@ -659,12 +659,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   opacity: 0.6;
-  transform: scale(0.85);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .mySwiper .swiper-slide-active {
   opacity: 1;
-  transform: scale(1.1);
   box-shadow: 0 16px 48px rgba(212, 175, 55, 0.15);
   border-color: var(--accent-primary);
   z-index: 10;
@@ -877,7 +878,7 @@ margin-top: 28%;
 }
 .asset-profit {
     font-weight: 600;
-    color: var(--positive-color);
+    color: var(--accent-primary);
 }
 
 /* Slide 4: Evolução Mensal */
@@ -1063,6 +1064,9 @@ margin-top: 28%;
 
 .final-card-main-metric {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .main-metric-label {
@@ -1090,6 +1094,9 @@ margin-top: 28%;
     padding: 1rem;
     text-align: center;
     border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .secondary-metric-card.positive {
     border-color: var(--positive-color);
@@ -1245,8 +1252,7 @@ margin-top: 28%;
         .wrapped-subtitle-main { font-size: 1rem; color: var(--text-secondary); text-align: center; margin-bottom: 4rem; opacity: 0.8; font-weight: 400; }
         .mySwiper { width: 100%; max-width: 100%; padding: 20px 0 30px; position: relative; margin-bottom: 60px; min-height: 720px; }
         .mySwiper .swiper-wrapper { align-items: center; }
-        .mySwiper .swiper-slide { width: 580px; height: 750px; border-radius: 16px; overflow: hidden; background: var(--surface-card); backdrop-filter: blur(12px); border: 1px solid var(--border-color); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); transition: all 0.4s ease; display: flex; flex-direction: column; opacity: 0.6; transform: scale(0.85); }
-        .mySwiper .swiper-slide-active { opacity: 1; transform: scale(1.1); box-shadow: 0 16px 48px rgba(212, 175, 55, 0.15); border-color: var(--accent-primary); z-index: 10; }
+        
 
         /* --- ESTILOS CORRIGIDOS PARA O SLIDE 1 --- */
         .wrapped-slide-intro-v2 {
@@ -1367,6 +1373,60 @@ margin-top: 28%;
 }
 .export-card-main-metric {
     text-align: center;
+}
+/* ======================================================================= */
+/* === CSS CORRIGIDO E OTIMIZADO PARA EXPORTAÇÃO (html2canvas) === */
+/* ======================================================================= */
+
+/* Card principal do resumo final */
+.final-card-main-metric {
+    text-align: center;
+    /* Adiciona flexbox para um controle de alinhamento explícito */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.main-metric-value {
+    line-height: 1.1; /* Ajuda a remover espaçamento extra que confunde a biblioteca */
+}
+
+/* Card de métrica secundária (ex: TOTAL DE TRADES) */
+.secondary-metric-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+    border: 1px solid transparent;
+    padding: 1rem;
+    /* A MUDANÇA MAIS IMPORTANTE ESTÁ AQUI:
+      Usamos Flexbox para forçar um alinhamento vertical e horizontal perfeito.
+    */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza o conteúdo na vertical */
+    align-items: center;    /* Centraliza o conteúdo na horizontal */
+    min-height: 95px;       /* Define uma altura mínima para consistência visual */
+}
+
+.secondary-metric-label {
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.secondary-metric-value {
+    line-height: 1.1;
+}
+
+/* Container do Ativo #1, com mais padding para garantir espaço */
+.final-card-top-asset {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-sm);
+    /* Aumenta o padding para dar mais "ar" verticalmente */
+    padding: 1.1rem 1.2rem; 
+    border-left: 3px solid var(--accent-primary);
 }
 </style>
 </head>
@@ -1521,7 +1581,7 @@ margin-top: 28%;
                     <div id="active-tab-slider"></div>
                     <button id="main-tab-cambial" class="main-tab-button active">Envios e Retiradas</button>
                     <button id="main-tab-ir" class="main-tab-button">Apuração Anual de Resultados</button>
-                    <button id="main-tab-wrapped" class="main-tab-button">XTRADERS WRAPPED</button>
+                    <button id="main-tab-wrapped" class="main-tab-button">XTRADERS REPORT</button>
                 </div>
             </nav>
 
@@ -1699,6 +1759,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+let renderFinalChart;
 
 // --- ELEMENTOS DO DOM ---
 const loginScreen = document.getElementById('login-screen');
@@ -2537,10 +2598,10 @@ function processAndRenderCambial(transactions) {
                     <div class="overflow-x-auto">
                         <table class="min-w-full">
                             <thead class="border-b border-border-color">
-                                <tr>${exportHeaders.map(h => `<th class="text-left py-3 px-4 font-semibold text-sm text-text-secondary uppercase tracking-wider">${h}</th>`).join('')}</tr>
+                                <tr>${exportHeaders.map(h => `<th class="text-center py-3 px-4 font-semibold text-sm text-text-secondary uppercase tracking-wider">${h}</th>`).join('')}</tr>
                             </thead>
                             <tbody class="divide-y divide-border-color">
-                                ${detailedData.map(row => `<tr>${row.map(cell => `<td class="py-4 px-4 whitespace-nowrap">${cell}</td>`).join('')}</tr>`).join('')}
+                                ${detailedData.map(row => `<tr>${row.map(cell => `<td class="text-center py-4 px-4 whitespace-nowrap">${cell}</td>`).join('')}</tr>`).join('')}
                             </tbody>
                         </table>
                     </div>
@@ -2707,7 +2768,7 @@ function displayResults_IR(data, plataforma, impostoAnual) {
                         <p class="kpi-card-value">${formatCurrency(impostoAnual)}</p>
                     </div>
                     <div class="kpi-card">
-                        <p class="kpi-card-title">Resultado Líquido</p>
+                        <p class="kpi-card-title">${resultadoAposDarf < 0 ? 'VALOR A COMPENSAR' : 'Resultado Líquido'}</p>
                         <p class="kpi-card-value ${resultadoAposDarf >= 0 ? 'text-positive' : 'text-negative'}">${formatCurrency(resultadoAposDarf)}</p>
                     </div>
                 </div>
@@ -2876,7 +2937,7 @@ function generateAndDisplayWrapped(tradesData) {
 </svg>
 
                                 </div>
-                                <div class="intro-v2-footer">WRAPPED</div>
+                                <div class="intro-v2-footer">REPORT</div>
                             </div>
                         </div>
 
@@ -2886,7 +2947,7 @@ function generateAndDisplayWrapped(tradesData) {
                             <div class="slide-title">VISÃO GERAL</div>
 
                             <div class="main-result-card">
-                                <div class="result-label">RESULTADO LÍQUIDO ANUAL</div>
+                                <div class="result-label">RESULTADO ANUAL</div>
                                 <div class="result-value">${formatCurrency(netResult)}</div>
                             </div>
 
@@ -2995,12 +3056,12 @@ function generateAndDisplayWrapped(tradesData) {
                     </div></old_str>
 
                     <!-- Slide 7: Card Final de Resumo -->
-                    <div class="swiper-slide wrapped-slide">
+                    <div class="swiper-slide wrapped-slide" id="final-slide-to-export">
                         <div class="slide-content">
                             <div class="final-summary-card" id="export-summary-card">
 
                                 <div class="final-card-main-metric">
-                                    <div class="main-metric-label">RESULTADO LÍQUIDO ANUAL</div>
+                                    <div class="main-metric-label">RESULTADO ANUAL</div>
                                     <div class="main-metric-value">${formatCurrency(netResult)}</div>
                                 </div>
 
@@ -3056,7 +3117,7 @@ function generateAndDisplayWrapped(tradesData) {
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
-                    Exportar como Imagem
+                    <span>Exportar como Imagem</span>
                 </button>
                 <button id="share-wrapped-btn" class="btn btn-secondary">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -3071,10 +3132,16 @@ function generateAndDisplayWrapped(tradesData) {
     // Inicializar Swiper
     setTimeout(() => {
         const swiper = new Swiper('.mySwiper', {
-            slidesPerView: 'auto',
-            centeredSlides: true,
-            spaceBetween: 30,
+            effect: 'coverflow',
             grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2.5,
+            },
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true,
@@ -3163,13 +3230,15 @@ function generateAndDisplayWrapped(tradesData) {
         });
     }
 
-    function renderFinalChart() {
-        const chartCanvas = document.getElementById('wrapped-final-chart');
+    renderFinalChart = function(canvasElement) {
+        const chartCanvas = canvasElement || document.getElementById('wrapped-final-chart');
         if (!chartCanvas) return;
 
-        if (window.wrappedFinalChart) window.wrappedFinalChart.destroy();
+        if (!canvasElement && window.wrappedFinalChart) {
+            window.wrappedFinalChart.destroy();
+        }
 
-        window.wrappedFinalChart = new Chart(chartCanvas, {
+        const chart = new Chart(chartCanvas, {
             type: 'line',
             data: {
                 labels: sortedMonths.map(month => {
@@ -3190,7 +3259,8 @@ function generateAndDisplayWrapped(tradesData) {
                 }]
             },
             options: {
-                devicePixelRatio:2,
+                animation: false,
+                devicePixelRatio: 3, // Increased for better quality
                 maintainAspectRatio: false,
                 responsive: true,
                 plugins: { 
@@ -3219,6 +3289,10 @@ function generateAndDisplayWrapped(tradesData) {
                 }
             }
         });
+
+        if (!canvasElement) {
+            window.wrappedFinalChart = chart;
+        }
     }
 
     // Configurar event listeners
@@ -3268,6 +3342,10 @@ async function generateImageBlobFromElement(elementId, chartData) {
     // 1. Clonar o nó do DOM
     const clone = originalElement.cloneNode(true);
     
+    // Set width and height explicitly to help html2canvas
+    clone.style.width = originalElement.offsetWidth + 'px';
+    clone.style.height = originalElement.offsetHeight + 'px';
+
     // 2. Copiar os estilos computados para garantir a aparência exata
     const computedStyle = window.getComputedStyle(originalElement);
     for (const style of computedStyle) {
@@ -3280,7 +3358,7 @@ async function generateImageBlobFromElement(elementId, chartData) {
     clone.style.top = '0';
     clone.style.left = '0';
     clone.style.zIndex = '-1'; // Coloca atrás de todo o conteúdo
-    clone.style.opacity = '0'; // Torna 100% transparente
+    clone.style.opacity = '1'; // Mantém a opacidade para a captura
     clone.style.pointerEvents = 'none'; // Impede qualquer interação do mouse
     // ------------------------------------
     
@@ -3290,8 +3368,8 @@ async function generateImageBlobFromElement(elementId, chartData) {
     try {
         // 5. Redesenhar o gráfico no canvas do clone
         const clonedCanvas = clone.querySelector('canvas');
-        if (clonedCanvas && chartData) {
-            renderFinalChart(clonedCanvas, chartData.sortedMonths, chartData.monthlyResults);
+        if (clonedCanvas) {
+            renderFinalChart(clonedCanvas);
         }
 
         // 6. Esperar que as fontes estejam 100% prontas
@@ -3300,12 +3378,14 @@ async function generateImageBlobFromElement(elementId, chartData) {
         // 7. Esperar o próximo ciclo de renderização para garantir que o layout está estável
         const canvas = await new Promise((resolve) => {
             requestAnimationFrame(() => {
-                // A captura agora é feita em um elemento que o navegador renderizou completamente
-                html2canvas(clone, {
-                    backgroundColor: 'transparent', // Usa o fundo do próprio elemento
-                    useCORS: true,
-                    scale: 3,
-                }).then(resolve);
+                setTimeout(() => {
+                    // A captura agora é feita em um elemento que o navegador renderizou completamente
+                    html2canvas(clone, {
+                        backgroundColor: 'transparent', // Usa o fundo do próprio elemento
+                        useCORS: true,
+                        scale: 4, // Increased for better quality
+                    }).then(resolve);
+                }, 200); // Add a 200ms delay
             });
         });
 
@@ -3323,15 +3403,10 @@ async function exportWrappedAsImage() {
     const button = document.getElementById('export-wrapped-btn');
     if (button.disabled) return;
 
-    // Adiciona um <span> para podermos alterar o texto sem remover o SVG
-    if (!button.querySelector('span')) {
-        button.innerHTML += '<span>Exportar como Imagem</span>';
-    }
-
     updateButtonState(button, 'Gerando...', true);
 
     try {
-        const imageBlob = await generateImageBlobFromElement('export-summary-card');
+        const imageBlob = await generateImageBlobFromElement('final-slide-to-export');
         
         const link = document.createElement('a');
         link.download = `meu_resumo_anual_xtraders.png`;
@@ -3365,7 +3440,7 @@ async function shareWrapped() {
     updateButtonState(button, 'Preparando...', true);
 
     try {
-        const imageBlob = await generateImageBlobFromElement('export-summary-card');
+        const imageBlob = await generateImageBlobFromElement('final-slide-to-export');
         const imageFile = new File([imageBlob], 'resumo_anual_xtraders.png', { type: 'image/png' });
 
         // Verifica se o navegador suporta compartilhar ARQUIVOS
@@ -3588,7 +3663,7 @@ async function generateProfessionalPDF_IR() { // A função agora é ASYNC
         const pageWidth = doc.internal.pageSize.getWidth();
         
         // --- 1. CABEÇALHO COM LOGO ---
-        const svgString = `<svg viewBox="0 0 59.3 45.9" xmlns="http://www.w3.org/2000/svg"><path d="M4.76369 -0.719727C2.13278 -0.719727 0 1.41305 0 4.04396V4.04396C0.00217239 3.70526 0.105853 3.37498 0.297665 3.09573C0.489477 2.81649 0.760619 2.60109 1.07611 2.47733C1.3916 2.35357 1.73695 2.32713 2.06762 2.40142C2.39829 2.47571 2.6991 2.64732 2.93124 2.89411L12.335 12.8644C13.2797 13.866 14.5956 14.4337 15.9724 14.4337H25.321C25.7157 14.4314 26.1025 14.5448 26.4334 14.7599C26.7644 14.975 27.0249 15.2823 27.1829 15.6438C27.3409 16.0054 27.3894 16.4053 27.3224 16.794C27.2553 17.1828 27.0757 17.5434 26.8058 17.8313L2.93398 43.2184C2.70202 43.4662 2.40099 43.6387 2.06985 43.7135C1.7387 43.7884 1.3927 43.7622 1.07662 43.6383C0.760551 43.5144 0.488961 43.2986 0.297012 43.0187C0.105064 42.7389 0.00159475 42.4079 0 42.0686V42.0686C0 44.6587 2.09968 46.7584 4.68977 46.7584H55.1698C57.9313 46.7584 60.1698 44.5198 60.1698 41.7584V4.28028C60.1698 1.51886 57.9313 -0.719727 55.1698 -0.719727H4.76369ZM18.297 1.59641C18.1396 1.42755 18.0354 1.2162 17.9972 0.988633C17.9591 0.761063 17.9887 0.527307 18.0824 0.316417C18.1761 0.105528 18.3297 -0.073197 18.5242 -0.197543C18.7187 -0.321889 18.9455 -0.386374 19.1763 -0.382983H40.9415C41.1711 -0.38424 41.3961 -0.318396 41.5888 -0.193551C41.7814 -0.0687055 41.9334 0.109697 42.026 0.319715C42.1185 0.529733 42.1476 0.762208 42.1097 0.988546C42.0718 1.21488 41.9686 1.42522 41.8126 1.59367L32.5669 11.5153C32.2486 11.8553 31.8638 12.1264 31.4364 12.3117C31.009 12.497 30.5481 12.5926 30.0822 12.5926C29.6163 12.5926 29.1553 12.497 28.7279 12.3117C28.3005 12.1264 27.9158 11.8553 27.5975 11.5153L18.297 1.59641ZM40.9196 46.501C40.9196 46.498 40.9171 46.4955 40.914 46.4955H19.1544C18.9243 46.4973 18.6986 46.4316 18.5054 46.3066C18.3122 46.1817 18.1598 46.0029 18.0671 45.7923C17.9745 45.5817 17.9455 45.3487 17.984 45.1219C18.0224 44.8951 18.1264 44.6845 18.2833 44.5161L27.5208 34.5973C27.8391 34.2572 28.2238 33.9862 28.6512 33.8008C29.0786 33.6155 29.5396 33.5199 30.0055 33.5199C30.4714 33.5199 30.9323 33.6155 31.3597 33.8008C31.7871 33.9862 32.1719 34.2572 32.4902 34.5973L41.788 44.5216C41.9465 44.6896 42.052 44.9004 42.0916 45.1279C42.1311 45.3553 42.1028 45.5894 42.0103 45.8009C41.9177 46.0125 41.765 46.1921 41.5711 46.3176C41.3786 46.442 41.1541 46.5077 40.925 46.5065C40.922 46.5065 40.9196 46.5041 40.9196 46.501V46.501ZM60.0959 42.0686C60.0937 42.4073 59.99 42.7376 59.7982 43.0168C59.6064 43.2961 59.3353 43.5115 59.0198 43.6352C58.7043 43.759 58.3589 43.7854 58.0283 43.7111C57.6976 43.6368 57.3968 43.4652 57.1646 43.2184L47.7636 33.2486C46.8189 32.2467 45.5029 31.6788 44.1259 31.6788H34.7776C34.3827 31.6809 33.9957 31.5673 33.6646 31.3521C33.3335 31.1369 33.0727 30.8294 32.9145 30.4678C32.7563 30.1061 32.7075 29.706 32.7743 29.3169C32.841 28.9279 33.0204 28.5669 33.2901 28.2785L57.1537 2.90506C57.3851 2.65704 57.6857 2.48423 58.0166 2.40904C58.3475 2.33386 58.6933 2.35977 59.0093 2.48342C59.3252 2.60707 59.5967 2.82274 59.7885 3.10247C59.9803 3.3822 60.0836 3.71307 60.0849 4.05217L60.0959 42.0686Z" fill="#000000"/></svg>`;
+        const svgString = `<svg viewBox="0 0 59.8 45.9" xmlns="http://www.w3.org/2000/svg"><path d="M4.76369 -0.719727C2.13278 -0.719727 0 1.41305 0 4.04396V4.04396C0.00217239 3.70526 0.105853 3.37498 0.297665 3.09573C0.489477 2.81649 0.760619 2.60109 1.07611 2.47733C1.3916 2.35357 1.73695 2.32713 2.06762 2.40142C2.39829 2.47571 2.6991 2.64732 2.93124 2.89411L12.335 12.8644C13.2797 13.866 14.5956 14.4337 15.9724 14.4337H25.321C25.7157 14.4314 26.1025 14.5448 26.4334 14.7599C26.7644 14.975 27.0249 15.2823 27.1829 15.6438C27.3409 16.0054 27.3894 16.4053 27.3224 16.794C27.2553 17.1828 27.0757 17.5434 26.8058 17.8313L2.93398 43.2184C2.70202 43.4662 2.40099 43.6387 2.06985 43.7135C1.7387 43.7884 1.3927 43.7622 1.07662 43.6383C0.760551 43.5144 0.488961 43.2986 0.297012 43.0187C0.105064 42.7389 0.00159475 42.4079 0 42.0686V42.0686C0 44.6587 2.09968 46.7584 4.68977 46.7584H55.1698C57.9313 46.7584 60.1698 44.5198 60.1698 41.7584V4.28028C60.1698 1.51886 57.9313 -0.719727 55.1698 -0.719727H4.76369ZM18.297 1.59641C18.1396 1.42755 18.0354 1.2162 17.9972 0.988633C17.9591 0.761063 17.9887 0.527307 18.0824 0.316417C18.1761 0.105528 18.3297 -0.073197 18.5242 -0.197543C18.7187 -0.321889 18.9455 -0.386374 19.1763 -0.382983H40.9415C41.1711 -0.38424 41.3961 -0.318396 41.5888 -0.193551C41.7814 -0.0687055 41.9334 0.109697 42.026 0.319715C42.1185 0.529733 42.1476 0.762208 42.1097 0.988546C42.0718 1.21488 41.9686 1.42522 41.8126 1.59367L32.5669 11.5153C32.2486 11.8553 31.8638 12.1264 31.4364 12.3117C31.009 12.497 30.5481 12.5926 30.0822 12.5926C29.6163 12.5926 29.1553 12.497 28.7279 12.3117C28.3005 12.1264 27.9158 11.8553 27.5975 11.5153L18.297 1.59641ZM40.9196 46.501C40.9196 46.498 40.9171 46.4955 40.914 46.4955H19.1544C18.9243 46.4973 18.6986 46.4316 18.5054 46.3066C18.3122 46.1817 18.1598 46.0029 18.0671 45.7923C17.9745 45.5817 17.9455 45.3487 17.984 45.1219C18.0224 44.8951 18.1264 44.6845 18.2833 44.5161L27.5208 34.5973C27.8391 34.2572 28.2238 33.9862 28.6512 33.8008C29.0786 33.6155 29.5396 33.5199 30.0055 33.5199C30.4714 33.5199 30.9323 33.6155 31.3597 33.8008C31.7871 33.9862 32.1719 34.2572 32.4902 34.5973L41.788 44.5216C41.9465 44.6896 42.052 44.9004 42.0916 45.1279C42.1311 45.3553 42.1028 45.5894 42.0103 45.8009C41.9177 46.0125 41.765 46.1921 41.5711 46.3176C41.3786 46.442 41.1541 46.5077 40.925 46.5065C40.922 46.5065 40.9196 46.5041 40.9196 46.501V46.501ZM60.0959 42.0686C60.0937 42.4073 59.99 42.7376 59.7982 43.0168C59.6064 43.2961 59.3353 43.5115 59.0198 43.6352C58.7043 43.759 58.3589 43.7854 58.0283 43.7111C57.6976 43.6368 57.3968 43.4652 57.1646 43.2184L47.7636 33.2486C46.8189 32.2467 45.5029 31.6788 44.1259 31.6788H34.7776C34.3827 31.6809 33.9957 31.5673 33.6646 31.3521C33.3335 31.1369 33.0727 30.8294 32.9145 30.4678C32.7563 30.1061 32.7075 29.706 32.7743 29.3169C32.841 28.9279 33.0204 28.5669 33.2901 28.2785L57.1537 2.90506C57.3851 2.65704 57.6857 2.48423 58.0166 2.40904C58.3475 2.33386 58.6933 2.35977 59.0093 2.48342C59.3252 2.60707 59.5967 2.82274 59.7885 3.10247C59.9803 3.3822 60.0836 3.71307 60.0849 4.05217L60.0959 42.0686Z" fill="#000000"/></svg>`;
 
         // **AWAIT** a conversão do SVG para PNG
         const pngDataUri = await convertSvgToPngDataUri(svgString, 30, 25);
@@ -3636,11 +3711,11 @@ async function generateProfessionalPDF_IR() { // A função agora é ASYNC
                 fillColor: [240, 240, 240], // Fundo cinza claro para o cabeçalho
                 textColor: [0, 0, 0],
                 fontStyle: 'bold',
-                halign: 'left'
+                halign: 'center'
             },
             bodyStyles: {
                 textColor: [50, 50, 50],
-                halign: 'left'
+                halign: 'center'
             },
             // Remove as linhas alternadas
             alternateRowStyles: undefined,
@@ -3651,7 +3726,7 @@ async function generateProfessionalPDF_IR() { // A função agora é ASYNC
                 } else {
                      // Alinha a primeira coluna à esquerda e as outras à direita
                     if (data.column.index > 0) {
-                        data.cell.styles.halign = 'right';
+                        data.cell.styles.halign = 'center';
                     }
                 }
             }
@@ -3691,27 +3766,108 @@ async function generateProfessionalPDF_IR() { // A função agora é ASYNC
     }
 }
 
-    function generateProfessionalPDF_Cambial() { 
-        if (Object.keys(cambialKpiData).length === 0) { alert('Dados não processados.'); return; } 
-        const doc = new jsPDF(); 
-        const user = auth.currentUser; 
-        let finalY = 45; 
-        doc.setFontSize(18).text('Relatório de Envios e Retiradas', 14, 30); 
-        doc.setFontSize(11).text(`Contribuinte: ${user.email}`, 14, 38); 
-        if (document.getElementById('include-cambial-summary').checked) { 
-            const kpi = cambialKpiData; 
-            const summaryText = `Variação Cambial Total: ${formatCurrency(kpi.lucroPrejuizoTotal)}\nImposto Devido sobre Retiradas: ${formatCurrency(kpi.impostoDevido)}\nSaldo Atual (USD): ${formatCurrency(kpi.saldoUSD, 'USD')}\nSaldo Atual (BRL): ${formatCurrency(kpi.custoSaldoBRL)}`; 
-            doc.setFontSize(12).setTextColor('#000000').text('Resumo Geral', 14, finalY); 
-            finalY += 7; 
-            doc.setFontSize(10).setTextColor('#000000').text(summaryText, 14, finalY); 
-            finalY += 30; 
-        } 
-        const head = [cambialExportData.headers]; 
-        const body = cambialExportData.data.map(row => Object.values(row).map(val => typeof val === 'number' ? val.toFixed(2) : val)); 
-        doc.autoTable({ head, body, startY: finalY, headStyles: {fillColor: '#1E1E26'} }); 
-        addPdfHeaderFooter(doc); 
-        doc.save(`Relatorio_Cambial_${user.email.split('@')[0]}.pdf`); 
+    async function generateProfessionalPDF_Cambial() { // A função agora é ASYNC
+    if (Object.keys(cambialKpiData).length === 0) {
+        alert('Dados não processados. Por favor, gere o relatório primeiro.');
+        return;
     }
+
+    try {
+        // Usar as mesmas unidades do outro PDF para consistência
+        const doc = new jsPDF({
+            orientation: 'p',
+            unit: 'px',
+            format: 'a4'
+        });
+
+        const user = auth.currentUser;
+        const pageWidth = doc.internal.pageSize.getWidth();
+
+        // --- 1. CABEÇALHO COM LOGO (copiado da função de IR) ---
+        const svgString = `<svg viewBox="0 0 59.8 45.9" xmlns="http://www.w3.org/2000/svg"><path d="M4.76369 -0.719727C2.13278 -0.719727 0 1.41305 0 4.04396V4.04396C0.00217239 3.70526 0.105853 3.37498 0.297665 3.09573C0.489477 2.81649 0.760619 2.60109 1.07611 2.47733C1.3916 2.35357 1.73695 2.32713 2.06762 2.40142C2.39829 2.47571 2.6991 2.64732 2.93124 2.89411L12.335 12.8644C13.2797 13.866 14.5956 14.4337 15.9724 14.4337H25.321C25.7157 14.4314 26.1025 14.5448 26.4334 14.7599C26.7644 14.975 27.0249 15.2823 27.1829 15.6438C27.3409 16.0054 27.3894 16.4053 27.3224 16.794C27.2553 17.1828 27.0757 17.5434 26.8058 17.8313L2.93398 43.2184C2.70202 43.4662 2.40099 43.6387 2.06985 43.7135C1.7387 43.7884 1.3927 43.7622 1.07662 43.6383C0.760551 43.5144 0.488961 43.2986 0.297012 43.0187C0.105064 42.7389 0.00159475 42.4079 0 42.0686V42.0686C0 44.6587 2.09968 46.7584 4.68977 46.7584H55.1698C57.9313 46.7584 60.1698 44.5198 60.1698 41.7584V4.28028C60.1698 1.51886 57.9313 -0.719727 55.1698 -0.719727H4.76369ZM18.297 1.59641C18.1396 1.42755 18.0354 1.2162 17.9972 0.988633C17.9591 0.761063 17.9887 0.527307 18.0824 0.316417C18.1761 0.105528 18.3297 -0.073197 18.5242 -0.197543C18.7187 -0.321889 18.9455 -0.386374 19.1763 -0.382983H40.9415C41.1711 -0.38424 41.3961 -0.318396 41.5888 -0.193551C41.7814 -0.0687055 41.9334 0.109697 42.026 0.319715C42.1185 0.529733 42.1476 0.762208 42.1097 0.988546C42.0718 1.21488 41.9686 1.42522 41.8126 1.59367L32.5669 11.5153C32.2486 11.8553 31.8638 12.1264 31.4364 12.3117C31.009 12.497 30.5481 12.5926 30.0822 12.5926C29.6163 12.5926 29.1553 12.497 28.7279 12.3117C28.3005 12.1264 27.9158 11.8553 27.5975 11.5153L18.297 1.59641ZM40.9196 46.501C40.9196 46.498 40.9171 46.4955 40.914 46.4955H19.1544C18.9243 46.4973 18.6986 46.4316 18.5054 46.3066C18.3122 46.1817 18.1598 46.0029 18.0671 45.7923C17.9745 45.5817 17.9455 45.3487 17.984 45.1219C18.0224 44.8951 18.1264 44.6845 18.2833 44.5161L27.5208 34.5973C27.8391 34.2572 28.2238 33.9862 28.6512 33.8008C29.0786 33.6155 29.5396 33.5199 30.0055 33.5199C30.4714 33.5199 30.9323 33.6155 31.3597 33.8008C31.7871 33.9862 32.1719 34.2572 32.4902 34.5973L41.788 44.5216C41.9465 44.6896 42.052 44.9004 42.0916 45.1279C42.1311 45.3553 42.1028 45.5894 42.0103 45.8009C41.9177 46.0125 41.765 46.1921 41.5711 46.3176C41.3786 46.442 41.1541 46.5077 40.925 46.5065C40.922 46.5065 40.9196 46.5041 40.9196 46.501V46.501ZM60.0959 42.0686C60.0937 42.4073 59.99 42.7376 59.7982 43.0168C59.6064 43.2961 59.3353 43.5115 59.0198 43.6352C58.7043 43.759 58.3589 43.7854 58.0283 43.7111C57.6976 43.6368 57.3968 43.4652 57.1646 43.2184L47.7636 33.2486C46.8189 32.2467 45.5029 31.6788 44.1259 31.6788H34.7776C34.3827 31.6809 33.9957 31.5673 33.6646 31.3521C33.3335 31.1369 33.0727 30.8294 32.9145 30.4678C32.7563 30.1061 32.7075 29.706 32.7743 29.3169C32.841 28.9279 33.0204 28.5669 33.2901 28.2785L57.1537 2.90506C57.3851 2.65704 57.6857 2.48423 58.0166 2.40904C58.3475 2.33386 58.6933 2.35977 59.0093 2.48342C59.3252 2.60707 59.5967 2.82274 59.7885 3.10247C59.9803 3.3822 60.0836 3.71307 60.0849 4.05217L60.0959 42.0686Z" fill="#000000"/></svg>`;
+        const pngDataUri = await convertSvgToPngDataUri(svgString, 30, 25);
+        doc.addImage(pngDataUri, 'PNG', (pageWidth / 2) - 15, 40, 30, 25);
+
+        // --- 2. TÍTULO E SUBTÍTULO (centralizado) ---
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(20);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Relatório de Envios e Retiradas', pageWidth / 2, 95, { align: 'center' });
+        doc.setFontSize(11);
+        doc.setTextColor(80);
+        doc.text(`Contribuinte: ${user.email}`, pageWidth / 2, 110, { align: 'center' });
+        doc.setDrawColor(220, 220, 220);
+        doc.line(30, 125, pageWidth - 30, 125);
+        let finalY = 140;
+
+        // --- 3. RESUMO GERAL ---
+        if (document.getElementById('include-cambial-summary').checked) {
+            const kpi = cambialKpiData;
+            
+            // Usar autoTable para um layout mais limpo e consistente
+            doc.autoTable({
+                body: [
+                    ['Variação Cambial Total:', formatCurrency(kpi.lucroPrejuizoTotal)],
+                    ['Imposto Devido sobre Retiradas:', formatCurrency(kpi.impostoDevido)],
+                    ['Saldo Atual (USD):', formatCurrency(kpi.saldoUSD, 'USD')],
+                    ['Saldo Atual (BRL):', formatCurrency(kpi.custoSaldoBRL)],
+                ],
+                startY: finalY,
+                theme: 'plain',
+                styles: {
+                    font: 'helvetica',
+                    cellPadding: { top: 4, right: 5, bottom: 4, left: 5 }
+                },
+                columnStyles: {
+                    0: { fontStyle: 'bold', halign: 'left' },
+                    1: { halign: 'center' }
+                }
+            });
+            finalY = doc.autoTable.previous.finalY + 20;
+        }
+
+        // --- 4. TABELA DE TRANSAÇÕES ---
+        const head = [cambialExportData.headers];
+        const body = cambialExportData.data.map(row => Object.values(row).map(val => typeof val === 'number' ? val.toFixed(2) : val));
+        
+        doc.autoTable({
+            head: head,
+            body: body,
+            startY: finalY,
+            theme: 'plain',
+            styles: {
+                font: 'helvetica',
+                lineWidth: 0,
+                cellPadding: { top: 6, right: 10, bottom: 6, left: 10 }
+            },
+            headStyles: {
+                fillColor: [240, 240, 240],
+                textColor: [0, 0, 0],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            bodyStyles: {
+                textColor: [50, 50, 50],
+                halign: 'center'
+            },
+            alternateRowStyles: undefined,
+            didParseCell: function(data) {
+                if (data.row.section !== 'head') {
+                    if (data.column.index > 2) { // Alinhar colunas numéricas à direita
+                        data.cell.styles.halign = 'center';
+                    }
+                }
+            }
+        });
+
+        addPdfHeaderFooter(doc);
+        doc.save(`Relatorio_Cambial_${user.email.split('@')[0]}.pdf`);
+
+    } catch (error) {
+        console.error("Erro ao gerar o PDF Cambial:", error);
+        alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+    }
+}
 
 // --- Bloco final para adicionar event listeners ---
 document.addEventListener('DOMContentLoaded', () => {
